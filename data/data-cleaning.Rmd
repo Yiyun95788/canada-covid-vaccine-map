@@ -92,6 +92,6 @@ vaccinations_cleaned %>%
 ```
 
 ```{r}
-write.csv(vaccinations_cleaned, "data/vaccinations_cleaned.csv", row.names = FALSE)
+write.csv(vaccinations_cleaned, "vaccinations_cleaned.csv", row.names = FALSE)
 
 ```
