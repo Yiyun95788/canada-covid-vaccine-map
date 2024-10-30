@@ -1,0 +1,97 @@
+---
+title: "STA313 Final Project - Group 45"
+---
+
+```{r}
+# Load necessary libraries
+library(dplyr)
+library(tidyr)
+
+```
+
+```{r}
+# Load the database
+vaccinations <- read.csv("vaccination-administration-bydosenumber_grouped.csv")
+head(vaccinations)
+
+# Provinces included in this database
+unique_values <- vaccinations %>% distinct(prename)
+unique_count <- n_distinct(vaccinations$prename)
+
+unique_values
+unique_count
+
+```
+
+```{r}
+# Data Cleaning Processes
+
+# Drop empty columns
+vaccinations_simplified <- vaccinations %>% select(week_end, pruid, prename, vaccine_group, product_name, numtotal_totaldoses_admin, numtotal_dose1_admin, numtotal_dose2_admin, numtotal_dose3_admin, numtotal_dose4_admin, numtotal_dose5._admin, numtotal_dosenotreported_admin)
+
+# Handle missing values
+# Remove rows with missing values
+vaccinations_cleaned <- na.omit(vaccinations_simplified)
+
+```
+
+```{r}
+summary(vaccinations_cleaned)
+
+```
+
+```{r}
+# Log-transformed total doses admin
+vaccinations_cleaned <- vaccinations_cleaned %>%
+  mutate(log_total_doses = log(numtotal_totaldoses_admin))
+
+# Histogram of numerical distribution
+hist(vaccinations_cleaned$log_total_doses, main="Distribution of Total Doses Administered", xlab="Logged Total Doses", col="skyblue")
+
+# Categorical distributions
+vaccinations_cleaned %>% 
+  count(vaccine_group) %>%
+  ggplot(aes(x=reorder(vaccine_group, n), y=n)) +
+  geom_bar(stat="identity", fill="steelblue") +
+  coord_flip() +
+  labs(title="Count of Vaccinations by Vaccine Group", x="Vaccine Group", y="Count")
+
+# Time series analysis
+vaccinations_cleaned %>%
+  group_by(week_end) %>%
+  summarise(total_doses = sum(numtotal_totaldoses_admin)) %>%
+  ggplot(aes(x=as.Date(week_end), y=total_doses)) +
+  geom_line(color="darkgreen") +
+  labs(title="Total Doses Administered Over Time", x="Week End", y="Total Doses")
+
+```
+
+```{r}
+# Vaccinations by provinces
+vaccinations_cleaned %>%
+  group_by(prename) %>%
+  summarise(total_doses = sum(numtotal_totaldoses_admin)) %>%
+  ggplot(aes(x=reorder(prename, total_doses), y=total_doses)) +
+  geom_bar(stat="identity", fill="purple") +
+  coord_flip() +
+  labs(title="Total Doses Administered by Province", x="Province", y="Total Doses")
+
+# Correlations between dose levels
+dose_data <- vaccinations_cleaned %>% select(starts_with("numtotal_dose"))
+corr_matrix <- cor(dose_data, use="complete.obs")
+corrplot::corrplot(corr_matrix, method="circle")
+
+# Detect for outliers
+vaccinations_cleaned %>%
+  select(starts_with("numtotal_dose")) %>%
+  gather(dose_type, dose_value) %>%
+  ggplot(aes(x=dose_type, y=dose_value)) +
+  geom_boxplot(fill="orange") +
+  labs(title="Distribution of Doses Administered by Type", x="Dose Type", y="Number of Doses")
+
+```
+
+```{r}
+write.csv(vaccinations_cleaned, "data/vaccinations_cleaned.csv", row.names = FALSE)
+
+```
