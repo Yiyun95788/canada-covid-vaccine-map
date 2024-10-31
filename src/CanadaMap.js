@@ -10,7 +10,7 @@ const CanadaMap = () => {
                 element: mapContainer.current,
                 scope: 'canada',
                 geographyConfig: {
-                    dataUrl: '/can.topo.json', // URL to your topojson file
+                    dataUrl: '/can.topo.json',
                     highlightOnHover: true,
                     highlightFillColor: '#ffcc00',
                     popupTemplate: function(geo, data) {
