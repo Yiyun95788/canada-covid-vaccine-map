@@ -26,8 +26,8 @@ const CanadaMap = () => {
                     const height = element.offsetHeight;
                     const projection = d3.geoMercator()
                         .center([-106.3468, 56.1304])
-                        .scale(800)
-                        .translate([width / 2, height / 2]); // Centering the map
+                        .scale(300)
+                        .translate([width / 2, height / 2 + 165]); // Centering the map
                     const path = d3.geoPath().projection(projection);
                     return { path: path, projection: projection };
                 }
