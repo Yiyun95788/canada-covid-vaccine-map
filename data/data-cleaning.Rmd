@@ -67,15 +67,24 @@ vaccinations_cleaned %>%
 ```
 
 ```{r}
+library(scales)
+
+```
+
+```{r}
 # Vaccinations by provinces
 vaccinations_cleaned %>%
+  filter(prename != "Canada") %>%
   group_by(prename) %>%
-  summarise(total_doses = sum(numtotal_totaldoses_admin)) %>%
-  ggplot(aes(x=reorder(prename, total_doses), y=total_doses)) +
+  ggplot(aes(x=reorder(prename, numtotal_totaldoses_admin), y=numtotal_totaldoses_admin)) +
   geom_bar(stat="identity", fill="purple") +
   coord_flip() +
-  labs(title="Total Doses Administered by Province", x="Province", y="Total Doses")
+  labs(title="Total Doses Administered by Province", x="Province", y="Total Doses") +
+  scale_y_continuous(labels = comma)
 
+```
+
+```{r}
 # Correlations between dose levels
 dose_data <- vaccinations_cleaned %>% select(starts_with("numtotal_dose"))
 corr_matrix <- cor(dose_data, use="complete.obs")
