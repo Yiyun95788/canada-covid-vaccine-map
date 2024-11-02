@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/canada-covid-vaccine-map/static/css/main.9fcfd44b.css",
-    "main.js": "/canada-covid-vaccine-map/static/js/main.ded8e692.js",
+    "main.js": "/canada-covid-vaccine-map/static/js/main.ab20f6cb.js",
     "static/js/453.ae4aecbc.chunk.js": "/canada-covid-vaccine-map/static/js/453.ae4aecbc.chunk.js",
     "index.html": "/canada-covid-vaccine-map/index.html",
     "main.9fcfd44b.css.map": "/canada-covid-vaccine-map/static/css/main.9fcfd44b.css.map",
-    "main.ded8e692.js.map": "/canada-covid-vaccine-map/static/js/main.ded8e692.js.map",
+    "main.ab20f6cb.js.map": "/canada-covid-vaccine-map/static/js/main.ab20f6cb.js.map",
     "453.ae4aecbc.chunk.js.map": "/canada-covid-vaccine-map/static/js/453.ae4aecbc.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.9fcfd44b.css",
-    "static/js/main.ded8e692.js"
+    "static/js/main.ab20f6cb.js"
   ]
 }

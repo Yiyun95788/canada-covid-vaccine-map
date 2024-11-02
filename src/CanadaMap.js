@@ -10,7 +10,7 @@ const CanadaMap = () => {
                 element: mapContainer.current,
                 scope: 'canada',
                 geographyConfig: {
-                    dataUrl: '/can.topo.json',
+                    dataUrl: 'https://yiyun95788.github.io/canada-covid-vaccine-map/can.topo.json',
                     highlightOnHover: true,
                     highlightFillColor: '#ffcc00',
                     popupTemplate: function(geo, data) {
