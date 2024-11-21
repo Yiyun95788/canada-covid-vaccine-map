@@ -36,7 +36,8 @@ vaccinations_cleaned <- na.omit(vaccinations_simplified)
 ```
 
 ```{r}
-summary(vaccinations_cleaned)
+unique_groups <- vaccinations_cleaned %>% distinct(vaccine_group)
+unique_groups
 
 ```
 
@@ -98,6 +99,66 @@ vaccinations_cleaned %>%
   geom_boxplot(fill="orange") +
   labs(title="Distribution of Doses Administered by Type", x="Dose Type", y="Number of Doses")
 
+```
+
+```{r}
+# Load required libraries
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(scales)
+library(lubridate)
+
+# Read the CSV file
+data <- read.csv("vaccination-administration-bydosenumber_grouped.csv")
+
+# Filter and process the data
+vaccination_trend <- data %>%
+  # Filter only rows where product_name is "Total"
+  filter(product_name == "Total") %>%
+  # Convert week_end to Date type
+  mutate(week_end = as.Date(week_end)) %>%
+  # Group by month and get the last entry for each month
+  group_by(month = floor_date(week_end, "month")) %>%
+  slice(which.max(numtotal_totaldoses_admin))
+
+# Create the plot
+ggplot(vaccination_trend, aes(x = month, y = numtotal_totaldoses_admin)) +
+  # Add the line
+  geom_line(color = "#2563eb", size = 1) +
+  # Add points
+  geom_point(color = "#2563eb", size = 2, alpha = 0.6) +
+  # Customize the theme
+  theme_minimal() +
+  # Customize the labels and title
+  labs(
+    title = "Ontario COVID-19 Vaccination Progress",
+    x = "Date",
+    y = "Total Vaccinations",
+    caption = "Data source: Ontario vaccination records"
+  ) +
+  # Format y-axis to millions
+  scale_y_continuous(
+    labels = function(x) paste0(round(x/1000000, 1), "M"),
+    breaks = seq(0, max(vaccination_trend$numtotal_totaldoses_admin), by = 5000000)
+  ) +
+  # Format x-axis dates
+  scale_x_date(
+    date_breaks = "2 months",
+    date_labels = "%Y-%m"
+  ) +
+  # Customize the theme further
+  theme(
+    plot.title = element_text(size = 14, face = "bold"),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    panel.grid.minor = element_blank(),
+    panel.grid.major = element_line(color = "gray90"),
+    plot.margin = margin(1, 1, 1, 1, "cm")
+  )
+
+# Save the plot if needed
+# ggsave("ontario_vaccination_trend.png", width = 12, height = 8, dpi = 300)
+```
 ```
 
 ```{r}
