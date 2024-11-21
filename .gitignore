@@ -1,5 +1,5 @@
 # Ignoring node_modules
-node_modules/
+# node_modules/
 
 # Other ignored files
 .idea/
