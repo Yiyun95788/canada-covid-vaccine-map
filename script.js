@@ -13,23 +13,23 @@ map.on('load', () => {
         data: './data/georef-canada-province@public.geojson'
     });
 
-    map.addLayer({
-        id: 'provinces-layer',
-        type: 'fill',
-        source: 'canada',
-        paint: {
-            'fill-color': '#627BC1',
-            'fill-opacity': 0.5
-        }
-    });
-
-    map.addLayer({
-        id: 'provinces-borders',
-        type: 'line',
-        source: 'canada',
-        paint: {
-            'line-color': '#000',
-            'line-width': 1
-        }
-    });
+    // map.addLayer({
+    //     id: 'provinces-layer',
+    //     type: 'fill',
+    //     source: 'canada',
+    //     paint: {
+    //         'fill-color': '#627BC1',
+    //         'fill-opacity': 0.5
+    //     }
+    // });
+    //
+    // map.addLayer({
+    //     id: 'provinces-borders',
+    //     type: 'line',
+    //     source: 'canada',
+    //     paint: {
+    //         'line-color': '#000',
+    //         'line-width': 1
+    //     }
+    // });
 });
