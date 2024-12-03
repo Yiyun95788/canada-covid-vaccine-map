@@ -157,3 +157,29 @@ html, body {
     display: none;
     z-index: 999;
 }
+
+.story-background1 {
+    position: absolute;
+    top: 90px;
+    left: 20px;
+    width: 450px;
+    height: 40%;
+    background-color: rgba(255, 255, 255, 0.9); /* Made slightly more opaque */
+    display: none;
+    z-index: 999;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Ensure content doesn't spill out */
+}
+
+.story-background1 img {
+    display: block;
+    margin: 0 auto;
+}
+
+/* Update year-bar button styles to show active state */
+.year-bar button.active {
+    background-color: #e0e0e0;
+    border-color: #999;
+}
