@@ -38,6 +38,7 @@ vaccinations_cleaned <- na.omit(vaccinations_simplified)
 ```{r}
 unique_groups <- vaccinations_cleaned %>% distinct(vaccine_group)
 unique_groups
+head(vaccinations_cleaned)
 
 ```
 
@@ -112,52 +113,38 @@ library(lubridate)
 # Read the CSV file
 data <- read.csv("vaccination-administration-bydosenumber_grouped.csv")
 
-# Filter and process the data
-vaccination_trend <- data %>%
-  # Filter only rows where product_name is "Total"
-  filter(product_name == "Total") %>%
-  # Convert week_end to Date type
-  mutate(week_end = as.Date(week_end)) %>%
-  # Group by month and get the last entry for each month
-  group_by(month = floor_date(week_end, "month")) %>%
-  slice(which.max(numtotal_totaldoses_admin))
+ontario_data <- data %>%
+  filter(prename == "Ontario")
 
-# Create the plot
-ggplot(vaccination_trend, aes(x = month, y = numtotal_totaldoses_admin)) +
-  # Add the line
-  geom_line(color = "#2563eb", size = 1) +
-  # Add points
-  geom_point(color = "#2563eb", size = 2, alpha = 0.6) +
-  # Customize the theme
-  theme_minimal() +
-  # Customize the labels and title
+original_line <- ontario_data %>%
+  group_by(week_end) %>% # 'week_end' is the date column
+  summarize(total_doses = sum(numtotal_dose1_admin, na.rm = TRUE)) # 'numtotal_dose1_admin' is the dose column
+
+# Create summarized data for each vaccine group
+group_lines <- ontario_data %>%
+  group_by(week_end, vaccine_group) %>%
+  summarize(total_doses = sum(numtotal_dose1_admin, na.rm = TRUE)) %>%
+  ungroup()
+
+# Plot the graph
+ggplot() +
+  geom_line(data = original_line, aes(x = week_end, y = total_doses, color = "Original"), size = 1.2) +
+  geom_line(data = group_lines, aes(x = week_end, y = total_doses, color = vaccine_group), size = 1) +
   labs(
-    title = "Ontario COVID-19 Vaccination Progress",
-    x = "Date",
-    y = "Total Vaccinations",
-    caption = "Data source: Ontario vaccination records"
+    title = "Vaccination Trends in Ontario",
+    x = "Week Ending",
+    y = "Total Dose 1 Administered",
+    color = "Vaccine Group"
   ) +
-  # Format y-axis to millions
-  scale_y_continuous(
-    labels = function(x) paste0(round(x/1000000, 1), "M"),
-    breaks = seq(0, max(vaccination_trend$numtotal_totaldoses_admin), by = 5000000)
-  ) +
-  # Format x-axis dates
-  scale_x_date(
-    date_breaks = "2 months",
-    date_labels = "%Y-%m"
-  ) +
-  # Customize the theme further
-  theme(
-    plot.title = element_text(size = 14, face = "bold"),
-    axis.text.x = element_text(angle = 45, hjust = 1),
-    panel.grid.minor = element_blank(),
-    panel.grid.major = element_line(color = "gray90"),
-    plot.margin = margin(1, 1, 1, 1, "cm")
+  theme_minimal() +
+  scale_color_manual(
+    values = c("Original" = "black", 
+               "Moderna Spikevax formulations" = "blue", 
+               "Pfizer-BioNTech Comirnaty formulations" = "red",
+               "Moderna Spikevax vaccines with the original strain" = "purple",
+               "Pfizer-BioNTech Comirnaty vaccines with the original strain" = "green",
+               "Vaccines with the XBB.1.5 strain" = "orange")
   )
-
-# Save the plot if needed
-# ggsave("ontario_vaccination_trend.png", width = 12, height = 8, dpi = 300)
 ```
 ```
 
