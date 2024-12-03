@@ -136,46 +136,44 @@ html, body {
     color: black;
 }
 
-.story-background1 {
+.story-background1, .story-background2 {
     position: absolute;
-    top: 90px;
-    left: 20px;
-    width: 450px;
-    height: 40%;
-    background-color: rgba(255, 255, 255, 0.7);
-    display: none;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 5px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    padding: 15px;
     z-index: 999;
+    display: none;
+    left: 20px; /* Both aligned to the left */
+    width: 400px; /* Fixed width for both panels */
+}
+
+.story-background1 {
+    top: 90px;
+    height: 40vh; /* Using viewport height */
 }
 
 .story-background2 {
-    position: absolute;
-    top: 425px;
-    left: 20px;
-    width: 450px;
-    height: 40%;
-    background-color: rgba(255, 255, 255, 0.7);
-    display: none;
-    z-index: 999;
+    top: calc(90px + 42vh); /* Position it right below background1 with a small gap */
+    height: 40vh;
 }
 
-.story-background1 {
-    position: absolute;
-    top: 90px;
-    left: 20px;
-    width: 450px;
-    height: 40%;
-    background-color: rgba(255, 255, 255, 0.9); /* Made slightly more opaque */
-    display: none;
-    z-index: 999;
-    padding: 15px;
-    border-radius: 5px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    overflow: hidden; /* Ensure content doesn't spill out */
+/* Ensure images and iframes fit properly */
+.story-background1 img,
+.story-background2 iframe {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border: none;
 }
 
-.story-background1 img {
-    display: block;
-    margin: 0 auto;
+/* Add style for the story text when data is not available */
+.story-text {
+    font-size: 16px;
+    font-weight: bold;
+    color: black;
+    text-align: center;
+    margin-top: 20px;
 }
 
 /* Update year-bar button styles to show active state */

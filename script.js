@@ -28,6 +28,25 @@ document.addEventListener("DOMContentLoaded", function () {
     let selectedProvince = null;
     let selectedYear = "2021";
 
+    const mortalityButton = document.querySelector('.dropdown button[data-type="mortality"]');
+    const vaccinationButton = document.querySelector('.dropdown button[data-type="vaccination"]');
+
+    mortalityButton.addEventListener('click', function() {
+        if (selectedProvince) {
+            showBackground1();
+            hideBackground2();
+            updateMortalityChart(selectedProvince, selectedYear);
+        }
+    });
+
+    vaccinationButton.addEventListener('click', function() {
+        if (selectedProvince) {
+            hideBackground1();
+            showBackground2();
+            updateVaccinationChart(selectedProvince, selectedYear);
+        }
+    });
+
     fetch("./data/georef-canada-province@public.geojson")
         .then((response) => response.json())
         .then((geojsonData) => {
@@ -60,25 +79,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
                             if (clickedProvince === currentlyDisplayedProvince) {
                                 hideBackground1();
+                                hideBackground2();
                                 currentlyDisplayedProvince = null;
                             } else {
-                                console.log("Raw province name:", clickedProvince);
                                 selectedProvince = clickedProvince;
                                 currentlyDisplayedProvince = clickedProvince;
-                                console.log("Selected province:", selectedProvince);
                                 updateMortalityChart(selectedProvince, selectedYear);
+                                updateVaccinationChart(selectedProvince, selectedYear);
                                 showBackground1();
+                                showBackground2();
                             }
-                        } else {
-                            console.error("Province name not found in properties:", feature.properties);
                         }
                     });
-
-                    function hideBackground1() {
-                        const background1 = document.querySelector(".story-background1");
-                        background1.style.display = "none";
-                    }
-
                 },
             }).addTo(map);
         })
@@ -92,19 +104,30 @@ document.addEventListener("DOMContentLoaded", function () {
             selectedYear = button.getAttribute("data-year");
             if (selectedProvince) {
                 updateMortalityChart(selectedProvince, selectedYear);
+                updateVaccinationChart(selectedProvince, selectedYear);
             }
         });
     });
 
+    // Format province name for mortality files (with underscores)
+    function formatProvinceNameMortality(province) {
+        return String(province || '')
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join('_');
+    }
+
+    // Format province name for vaccination files (with spaces)
+    function formatProvinceNameVaccination(province) {
+        return String(province || '')
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+    }
+
     function updateMortalityChart(province, year) {
         const background1 = document.querySelector(".story-background1");
-
-        console.log("Province value:", province, "Type:", typeof province); // Debug log
-
-        const provinceStr = String(province || '');
-        const formattedProvince = provinceStr.replace(/\s+/g, '_');
-
-        console.log("Formatted province:", formattedProvince); // Debug log
+        const formattedProvince = formatProvinceNameMortality(province);
 
         const imagePath = `./data/mortality/${formattedProvince}_${year}.png`;
 
@@ -117,10 +140,50 @@ document.addEventListener("DOMContentLoaded", function () {
         img.style.maxHeight = '100%';
         img.style.objectFit = 'contain';
         img.onerror = function() {
-            background1.innerHTML = '<p class="story-text">Data not available for this period</p>';
+            background1.innerHTML = '<p class="story-text">Mortality data not available for this period</p>';
         };
 
         background1.appendChild(img);
+    }
+
+    function updateVaccinationChart(province, year) {
+        const background2 = document.querySelector(".story-background2");
+        const formattedProvince = formatProvinceNameVaccination(province);
+
+        console.log('Original province name:', province);
+        console.log('Formatted province name:', formattedProvince);
+
+        const filePath = `./data/vaccinations/${formattedProvince}_${year}.html`;
+        console.log('Attempting to fetch file:', filePath);
+
+        fetch(filePath)
+            .then(response => {
+                console.log('Response status:', response.status);
+                console.log('Response ok:', response.ok);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(html => {
+                console.log('Successfully loaded HTML content');
+                background2.innerHTML = '';
+                const iframe = document.createElement('iframe');
+                iframe.style.width = '100%';
+                iframe.style.height = '100%';
+                iframe.style.border = 'none';
+                background2.appendChild(iframe);
+
+                iframe.contentWindow.document.open();
+                iframe.contentWindow.document.write(html);
+                iframe.contentWindow.document.close();
+            })
+            .catch(error => {
+                console.error('Detailed error:', error);
+                console.error('Error type:', error.name);
+                console.error('Error message:', error.message);
+                background2.innerHTML = '<p class="story-text">Vaccination data not available for this period</p>';
+            });
     }
 
     function showBackground1() {
@@ -128,4 +191,18 @@ document.addEventListener("DOMContentLoaded", function () {
         background1.style.display = "block";
     }
 
+    function hideBackground1() {
+        const background1 = document.querySelector(".story-background1");
+        background1.style.display = "none";
+    }
+
+    function showBackground2() {
+        const background2 = document.querySelector(".story-background2");
+        background2.style.display = "block";
+    }
+
+    function hideBackground2() {
+        const background2 = document.querySelector(".story-background2");
+        background2.style.display = "none";
+    }
 });
