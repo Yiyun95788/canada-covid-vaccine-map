@@ -28,25 +28,6 @@ document.addEventListener("DOMContentLoaded", function () {
     let selectedProvince = null;
     let selectedYear = "2021";
 
-    const mortalityButton = document.querySelector('.dropdown button[data-type="mortality"]');
-    const vaccinationButton = document.querySelector('.dropdown button[data-type="vaccination"]');
-
-    mortalityButton.addEventListener('click', function() {
-        if (selectedProvince) {
-            showBackground1();
-            hideBackground2();
-            updateMortalityChart(selectedProvince, selectedYear);
-        }
-    });
-
-    vaccinationButton.addEventListener('click', function() {
-        if (selectedProvince) {
-            hideBackground1();
-            showBackground2();
-            updateVaccinationChart(selectedProvince, selectedYear);
-        }
-    });
-
     fetch("./data/georef-canada-province@public.geojson")
         .then((response) => response.json())
         .then((geojsonData) => {
@@ -109,7 +90,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // Format province name for mortality files (with underscores)
     function formatProvinceNameMortality(province) {
         return String(province || '')
             .split(' ')
@@ -117,7 +97,6 @@ document.addEventListener("DOMContentLoaded", function () {
             .join('_');
     }
 
-    // Format province name for vaccination files (with spaces)
     function formatProvinceNameVaccination(province) {
         return String(province || '')
             .split(' ')
@@ -150,23 +129,16 @@ document.addEventListener("DOMContentLoaded", function () {
         const background2 = document.querySelector(".story-background2");
         const formattedProvince = formatProvinceNameVaccination(province);
 
-        console.log('Original province name:', province);
-        console.log('Formatted province name:', formattedProvince);
-
         const filePath = `./data/vaccinations/${formattedProvince}_${year}.html`;
-        console.log('Attempting to fetch file:', filePath);
 
         fetch(filePath)
             .then(response => {
-                console.log('Response status:', response.status);
-                console.log('Response ok:', response.ok);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 return response.text();
             })
             .then(html => {
-                console.log('Successfully loaded HTML content');
                 background2.innerHTML = '';
                 const iframe = document.createElement('iframe');
                 iframe.style.width = '100%';
@@ -179,9 +151,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 iframe.contentWindow.document.close();
             })
             .catch(error => {
-                console.error('Detailed error:', error);
-                console.error('Error type:', error.name);
-                console.error('Error message:', error.message);
                 background2.innerHTML = '<p class="story-text">Vaccination data not available for this period</p>';
             });
     }
