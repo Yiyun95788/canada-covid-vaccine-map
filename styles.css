@@ -144,21 +144,20 @@ html, body {
     padding: 15px;
     z-index: 999;
     display: none;
-    left: 20px; /* Both aligned to the left */
-    width: 400px; /* Fixed width for both panels */
+    left: 20px;
+    width: 400px;
 }
 
 .story-background1 {
     top: 90px;
-    height: 40vh; /* Using viewport height */
-}
-
-.story-background2 {
-    top: calc(90px + 42vh); /* Position it right below background1 with a small gap */
     height: 40vh;
 }
 
-/* Ensure images and iframes fit properly */
+.story-background2 {
+    top: calc(90px + 42vh);
+    height: 40vh;
+}
+
 .story-background1 img,
 .story-background2 iframe {
     width: 100%;
@@ -167,7 +166,6 @@ html, body {
     border: none;
 }
 
-/* Add style for the story text when data is not available */
 .story-text {
     font-size: 16px;
     font-weight: bold;
@@ -176,8 +174,39 @@ html, body {
     margin-top: 20px;
 }
 
-/* Update year-bar button styles to show active state */
 .year-bar button.active {
     background-color: #e0e0e0;
     border-color: #999;
+}
+
+.info.legend {
+    background: white;
+    padding: 6px 8px;
+    border: 1px solid rgba(0,0,0,0.2);
+    border-radius: 4px;
+}
+
+.info.legend i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.7;
+}
+
+.alert-notification {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 1000;
+    background: white;
+    padding: 15px;
+    border-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
