@@ -179,6 +179,28 @@ html, body {
     border-color: #999;
 }
 
+.return-button {
+    background: white;
+    padding: 5px;
+    border-radius: 4px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.2);
+    cursor: pointer;
+    top: 100px;
+}
+
+.return-btn {
+    padding: 8px 16px;
+    font-size: 14px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.return-btn:hover {
+    background-color: #f0f0f0;
+}
+
 .info.legend {
     background: white;
     padding: 6px 8px;
