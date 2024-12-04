@@ -66,6 +66,25 @@ document.addEventListener("DOMContentLoaded", function () {
     const mortalityButton = dropdown.querySelector("button:nth-child(1)");
     const vaccinationsButton = dropdown.querySelector("button:nth-child(2)");
 
+    const yearButtons = document.querySelectorAll(".year-bar button");
+
+    yearButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+            if (!currentHeatMapType) {  // Only handle year changes when heat map is off
+                yearButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                selectedYear = button.getAttribute("data-year");
+                if (selectedProvince) {
+                    updateMortalityChart(selectedProvince, selectedYear);
+                    updateVaccinationChart(selectedProvince, selectedYear);
+                }
+            }
+        });
+    });
+
+    document.querySelector('[data-year="2021"]').classList.add('active');
+
     mortalityButton.addEventListener("click", function() {
         currentHeatMapType = "MORTALITY";
         updateHeatMap(currentHeatMapType);
