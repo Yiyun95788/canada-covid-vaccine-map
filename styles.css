@@ -216,6 +216,94 @@ html, body {
     opacity: 0.7;
 }
 
+.visualization-link {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: transparent;
+    color: black;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.visualization-link:hover {
+    background-color: #f0f0f0;
+}
+
+.visualizations-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.return-home {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: transparent;
+    color: black;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.return-home:hover {
+    background-color: #f0f0f0;
+}
+
+.visualization-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.visualization-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.visualization-card {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.visualization-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.visualization-content {
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.buttons .button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: transparent;
+    color: black;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.buttons .button:hover {
+    background-color: #f0f0f0;
+}
+
 .alert-notification {
     position: fixed;
     top: 80px;
