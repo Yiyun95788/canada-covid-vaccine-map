@@ -24,19 +24,41 @@ class TorontoMap {
 
     async loadData() {
         try {
+            // Update paths to be relative to the root
             const [geoJsonResponse, csvResponse] = await Promise.all([
-                fetch('../data/Toronto.geojson'),
-                fetch('../data/toronto_covid.csv')
+                fetch('./data/Toronto.geojson'),
+                fetch('./data/toronto_covid.csv')
             ]);
+
+            if (!geoJsonResponse.ok) {
+                throw new Error(`Failed to load GeoJSON: ${geoJsonResponse.status}`);
+            }
+            if (!csvResponse.ok) {
+                throw new Error(`Failed to load CSV: ${csvResponse.status}`);
+            }
+
             this.torontoGeoJson = await geoJsonResponse.json();
             const csvText = await csvResponse.text();
-            this.covidData = Papa.parse(csvText, { header: true }).data;
+            const parsedCsv = Papa.parse(csvText, { header: true });
+
+            if (parsedCsv.errors.length > 0) {
+                console.warn('CSV parsing warnings:', parsedCsv.errors);
+            }
+
+            this.covidData = parsedCsv.data.filter(row => row['Neighbourhood Name']);
+
+            if (!this.covidData.length) {
+                throw new Error('No valid COVID data loaded');
+            }
         } catch (error) {
             console.error('Error loading Toronto data:', error);
+            throw error;
         }
     }
 
     processNeighborhoodData(metric) {
+        if (!this.covidData) return {};
+
         const neighborhoodStats = {};
         this.covidData.forEach(row => {
             if (!row['Neighbourhood Name']) return;
