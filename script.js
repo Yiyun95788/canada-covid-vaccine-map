@@ -247,18 +247,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function getColor(value, type) {
         if (type === 'MORTALITY') {
-            return value > 200000000 ? '#940808' :
-                value > 100000000 ? '#b52121' :
-                    value > 50000000 ? '#c64242' :
-                        value > 10000000 ? '#d66b6b' :
-                            value > 1000000 ? '#e19e9e' :
+            return value > 1500000 ? '#940808' :
+                value > 1000000 ? '#b52121' :
+                    value > 500000 ? '#c64242' :
+                        value > 100000 ? '#d66b6b' :
+                            value > 50000 ? '#e19e9e' :
                                 '#f7dede';
         } else {
-            return value > 3000000000 ? '#0d9408' :
-                value > 1000000000 ? '#3cb521' :
-                    value > 500000000 ? '#4fc642' :
-                        value > 100000000 ? '#79d66b' :
-                            value > 10000000 ? '#ade19e' :
+            return value > 30000000 ? '#0d9408' :
+                value > 15000000 ? '#3cb521' :
+                    value > 5000000 ? '#4fc642' :
+                        value > 1000000 ? '#79d66b' :
+                            value > 100000 ? '#ade19e' :
                                 '#e3f7de';
         }
     }
@@ -274,21 +274,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (currentHeatMapType === 'MORTALITY') {
                 div.innerHTML += `
-                    <i style="background:#940808"></i> > 200M<br>
-                    <i style="background:#b52121"></i> 100M - 200M<br>
-                    <i style="background:#c64242"></i> 50M - 100M<br>
-                    <i style="background:#d66b6b"></i> 10M - 50M<br>
-                    <i style="background:#e19e9e"></i> 1M - 10M<br>
-                    <i style="background:#f7dede"></i> < 1M
+                    <i style="background:#940808"></i> > 1.5M<br>
+                    <i style="background:#b52121"></i> 1M - 1.5M<br>
+                    <i style="background:#c64242"></i> 500K - 1M<br>
+                    <i style="background:#d66b6b"></i> 100K - 500K<br>
+                    <i style="background:#e19e9e"></i> 50K - 100K<br>
+                    <i style="background:#f7dede"></i> < 50K
                 `;
             } else {
                 div.innerHTML += `
-                    <i style="background:#0d9408"></i> > 3B<br>
-                    <i style="background:#3cb521"></i> 1B - 3B<br>
-                    <i style="background:#4fc642"></i> 500M - 1B<br>
-                    <i style="background:#79d66b"></i> 100M - 500M<br>
-                    <i style="background:#ade19e"></i> 10M - 100M<br>
-                    <i style="background:#e3f7de"></i> < 10M
+                    <i style="background:#0d9408"></i> > 30M<br>
+                    <i style="background:#3cb521"></i> 15M - 30M<br>
+                    <i style="background:#4fc642"></i> 5M - 15M<br>
+                    <i style="background:#79d66b"></i> 1M - 5M<br>
+                    <i style="background:#ade19e"></i> 100K - 1M<br>
+                    <i style="background:#e3f7de"></i> < 100K
                 `;
             }
 
