@@ -36,12 +36,7 @@ The data used in this project is sourced from the following:
 
 6. **Toronto COVID-19 Heat Map Data**  
    Dataset: [Toronto COVID-19 Cases](https://open.toronto.ca/dataset/covid-19-cases-in-toronto/)  
-   Source: City of Toronto Open Data  
-
-7. **Ottawa COVID-19 Rate Data**  
-   Report: COVID-19 in Ottawa Neighbourhoods  
-   Author: Ottawa Neighbourhood Study  
-   Accessed: [Neighbourhood Study - COVID-19 in Ottawa](https://www.neighbourhoodstudy.ca/covid-19-in-ottawa-neighbourhoods/)  
+   Source: City of Toronto Open Data
 
 
 ## Contact
