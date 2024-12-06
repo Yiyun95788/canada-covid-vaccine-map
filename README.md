@@ -25,6 +25,25 @@ The data used in this project is sourced from the following:
    Source: Public Health Agency of Canada  
    Accessed: [Public Health Agency of Canada - Current Situation](https://health-infobase.canada.ca/covid-19/current-situation.html?stat=rate&measure=deaths_total&map=pt#a2)
 
+4. **Ottawa Geographic Data (GeoJSON)**  
+   Dataset: [Ottawa Police GeoJSON Data](https://data.ottawapolice.ca/datasets/e88e7a21018a4038a3be758e5f947dde_0/about)  
+   Source: Ottawa Police Service  
+
+5. **Ottawa COVID-19 Rate Data**  
+   Report: COVID-19 in Ottawa Neighbourhoods  
+   Author: Ottawa Neighbourhood Study  
+   Accessed: [Neighbourhood Study - COVID-19 in Ottawa](https://www.neighbourhoodstudy.ca/covid-19-in-ottawa-neighbourhoods/)  
+
+6. **Toronto COVID-19 Heat Map Data**  
+   Dataset: [Toronto COVID-19 Cases](https://open.toronto.ca/dataset/covid-19-cases-in-toronto/)  
+   Source: City of Toronto Open Data  
+
+7. **Ottawa COVID-19 Rate Data**  
+   Report: COVID-19 in Ottawa Neighbourhoods  
+   Author: Ottawa Neighbourhood Study  
+   Accessed: [Neighbourhood Study - COVID-19 in Ottawa](https://www.neighbourhoodstudy.ca/covid-19-in-ottawa-neighbourhoods/)  
+
+
 ## Contact
 
 * Mujing Chen <aura.chen@mail.utoronto.ca>
