@@ -14,7 +14,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const container = document.getElementById('city-map');
         if (!container) return;
 
-        // Clean up existing elements
         if (map) {
             if (cityMap?.currentGeoJson) {
                 cityMap.currentGeoJson.remove();
@@ -55,7 +54,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         visContainers.style.display = visContainers.style.display === 'none' ? 'flex' : 'none';
                         button.innerHTML = visContainers.style.display === 'none' ? 'Show Visualization' : 'Hide Visualization';
                     } else {
-                        // Create containers for visualizations
                         visContainers = L.DomUtil.create('div', 'visualization-container');
                         visContainers.style.cssText = `
                             position: absolute;
