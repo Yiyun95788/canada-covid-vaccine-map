@@ -18,11 +18,34 @@ class TorontoMap {
 
     async initialize() {
         try {
+            this.showLoading();
             await this.loadData();
             this.addControls();
             this.updateHeatmap('Ever Hospitalized');
         } catch (error) {
             console.error('Initialization failed:', error);
+        } finally {
+            this.hideLoading();
+        }
+    }
+
+    showLoading() {
+        const container = this.map.getContainer();
+        this.loadingDiv = document.createElement('div');
+        this.loadingDiv.className = 'loading-overlay';
+        this.loadingDiv.innerHTML = `
+            <div class="loading-content">
+                <div class="loading-spinner"></div>
+                <div class="loading-text">Loading Toronto COVID-19 data...</div>
+            </div>
+        `;
+        container.appendChild(this.loadingDiv);
+    }
+
+    hideLoading() {
+        if (this.loadingDiv) {
+            this.loadingDiv.remove();
+            this.loadingDiv = null;
         }
     }
 
