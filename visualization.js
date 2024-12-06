@@ -27,6 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         if (visContainers) {
             visContainers.remove();
+            visContainers = null;
         }
 
         map = L.map('city-map', {
@@ -53,63 +54,64 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (visContainers) {
                         visContainers.style.display = visContainers.style.display === 'none' ? 'flex' : 'none';
                         button.innerHTML = visContainers.style.display === 'none' ? 'Show Visualization' : 'Hide Visualization';
-                    } else {
-                        visContainers = L.DomUtil.create('div', 'visualization-container');
-                        visContainers.style.cssText = `
-                            position: absolute;
-                            top: 60px;
-                            left: 10px;
-                            right: 10px;
-                            display: flex;
-                            z-index: 1000;
-                            background: white;
-                            padding: 15px;
-                            border-radius: 8px;
-                            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-                        `;
-
-                        if (city === 'Montreal') {
-                            // Montreal visualizations
-                            const mortalityContainer = L.DomUtil.create('div', 'vis-section', visContainers);
-                            mortalityContainer.style.cssText = `
-                                flex: 1;
-                                margin-right: 20px;
-                            `;
-                            const mortalityImg = L.DomUtil.create('img', '', mortalityContainer);
-                            mortalityImg.src = './data/montreal_mortality.png';
-                            mortalityImg.style.width = '100%';
-                            mortalityImg.style.height = 'auto';
-
-                            const vaccinationContainer = L.DomUtil.create('div', 'vis-section', visContainers);
-                            vaccinationContainer.style.cssText = `
-                                flex: 1;
-                            `;
-                            const vaccinationFrame = L.DomUtil.create('iframe', '', vaccinationContainer);
-                            vaccinationFrame.src = './data/montreal_vaccinations.html';
-                            vaccinationFrame.style.cssText = `
-                                width: 100%;
-                                height: 500px;
-                                border: none;
-                            `;
-                        } else if (city === 'Vancouver') {
-                            // Vancouver visualization
-                            const vancouverContainer = L.DomUtil.create('div', 'vis-section', visContainers);
-                            vancouverContainer.style.cssText = `
-                                flex: 1;
-                            `;
-                            const vancouverImg = L.DomUtil.create('img', '', vancouverContainer);
-                            vancouverImg.src = './data/vancouver.png';
-                            vancouverImg.style.cssText = `
-                                width: 100%;
-                                height: auto;
-                                max-height: 500px;
-                                object-fit: contain;
-                            `;
-                        }
-
-                        document.getElementById('city-map').appendChild(visContainers);
-                        button.innerHTML = 'Hide Visualization';
+                        return;
                     }
+
+                    visContainers = L.DomUtil.create('div', 'visualization-container');
+                    visContainers.style.cssText = `
+                        position: absolute;
+                        top: 60px;
+                        left: 10px;
+                        right: 10px;
+                        display: flex;
+                        z-index: 1000;
+                        background: white;
+                        padding: 15px;
+                        border-radius: 8px;
+                        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                    `;
+
+                    if (city === 'Montreal') {
+                        // Montreal visualizations
+                        const mortalityContainer = L.DomUtil.create('div', 'vis-section', visContainers);
+                        mortalityContainer.style.cssText = `
+                            flex: 1;
+                            margin-right: 20px;
+                        `;
+                        const mortalityImg = L.DomUtil.create('img', '', mortalityContainer);
+                        mortalityImg.src = './data/montreal_mortality.png';
+                        mortalityImg.style.width = '100%';
+                        mortalityImg.style.height = 'auto';
+
+                        const vaccinationContainer = L.DomUtil.create('div', 'vis-section', visContainers);
+                        vaccinationContainer.style.cssText = `
+                            flex: 1;
+                        `;
+                        const vaccinationFrame = L.DomUtil.create('iframe', '', vaccinationContainer);
+                        vaccinationFrame.src = './data/montreal_vaccinations.html';
+                        vaccinationFrame.style.cssText = `
+                            width: 100%;
+                            height: 500px;
+                            border: none;
+                        `;
+                    } else if (city === 'Vancouver') {
+                        // Vancouver visualization
+                        const vancouverContainer = L.DomUtil.create('div', 'vis-section', visContainers);
+                        vancouverContainer.style.cssText = `
+                            flex: 1;
+                        `;
+                        const vancouverImg = L.DomUtil.create('img', '', vancouverContainer);
+                        vancouverImg.src = './data/vancouver.png';
+                        vancouverImg.style.cssText = `
+                            width: 100%;
+                            height: auto;
+                            max-height: 500px;
+                            object-fit: contain;
+                        `;
+                    }
+
+                    document.getElementById('city-map').appendChild(visContainers);
+                    button.innerHTML = 'Hide Visualization';
                 };
                 return button;
             };
