@@ -9,6 +9,53 @@ document.addEventListener("DOMContentLoaded", function () {
     let returnButton = null;
     const yearBar = document.querySelector(".year-bar");
 
+    // Story functionality
+    const storyBackground = document.querySelector(".story-background");
+    const buttons = document.querySelector(".buttons");
+
+    console.log("Story background:", storyBackground);
+    console.log("Buttons:", buttons);
+    console.log("Button children:", buttons.childNodes);
+
+    let storyButton = buttons.querySelector('button:first-of-type');
+    if (!storyButton) {
+        storyButton = document.createElement("button");
+        storyButton.textContent = "STORY";
+        buttons.insertBefore(storyButton, buttons.firstChild);
+    }
+
+    storyButton.addEventListener("click", function(e) {
+        console.log("Story button clicked");
+        e.preventDefault();
+        if (storyBackground.style.display === "block") {
+            storyBackground.style.display = "none";
+        } else {
+            storyBackground.style.display = "block";
+        }
+    });
+
+    const storyText = buttons.childNodes[0];
+    if (storyText && storyText.nodeType === 3 && storyText.textContent.trim() === "STORY") {
+        const storyButton = document.createElement("button");
+        storyButton.textContent = "STORY";
+        buttons.replaceChild(storyButton, storyText);
+
+        storyButton.addEventListener("click", function() {
+            console.log("Story button clicked"); // Debug line
+            storyBackground.style.display = storyBackground.style.display === "block" ? "none" : "block";
+        });
+    }
+
+    // Close story when clicking outside
+    document.addEventListener("click", function(e) {
+        if (storyBackground &&
+            storyBackground.style.display === "block" &&
+            !storyBackground.contains(e.target) &&
+            !e.target.matches('.buttons *')) {
+            storyBackground.style.display = "none";
+        }
+    });
+
     const map = L.map("map").setView([70.0, -96.8], 2.5);
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -22,14 +69,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     dropdown.addEventListener("mouseleave", function () {
         dropdown.classList.remove("show");
-    });
-
-    const storyButton = document.getElementById("story");
-    const storyBackground = document.querySelector(".story-background");
-
-    storyButton.addEventListener("click", function () {
-        storyBackground.style.display =
-            storyBackground.style.display === "block" ? "none" : "block";
     });
 
     function createReturnButton() {
