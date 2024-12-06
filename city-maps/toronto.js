@@ -28,32 +28,34 @@ class TorontoMap {
 
     async loadData() {
         try {
-            const basePath = window.location.hostname.includes('github.io')
-                ? '/canada-covid-vaccine-map'
-                : '';
+            const isGitHubPages = window.location.hostname.includes('github.io');
+            const basePath = isGitHubPages ? '/canada-covid-vaccine-map' : '';
+
+            const geoJsonPath = `${basePath}/data/Toronto.geojson`;
+            const csvPath = `${basePath}/data/toronto_covid.csv`;
+
+            console.log('Fetching paths:', { geoJsonPath, csvPath, isGitHubPages });
 
             const [geoJsonResponse, csvResponse] = await Promise.all([
-                fetch(`${basePath}/data/Toronto.geojson`),
-                fetch(`${basePath}/data/toronto_covid.csv`)
+                fetch(geoJsonPath),
+                fetch(csvPath)
             ]);
 
             if (!geoJsonResponse.ok || !csvResponse.ok) {
-                throw new Error(`Failed to load data: GeoJSON ${geoJsonResponse.status}, CSV ${csvResponse.status}`);
+                throw new Error(`HTTP error: GeoJSON ${geoJsonResponse.status}, CSV ${csvResponse.status}`);
             }
 
-            // Handle responses
             this.torontoGeoJson = await geoJsonResponse.json();
             const csvText = await csvResponse.text();
 
-            const parsedCsv = Papa.parse(csvText, {
+            this.covidData = Papa.parse(csvText, {
                 header: true,
                 skipEmptyLines: true,
                 delimitersToGuess: [',', '\t', '|', ';']
-            });
+            }).data;
 
-            this.covidData = parsedCsv.data;
         } catch (error) {
-            console.error('Error loading Toronto data:', error);
+            console.error('Data loading failed:', error);
             throw error;
         }
     }
