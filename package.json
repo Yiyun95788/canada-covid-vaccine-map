@@ -1,0 +1,17 @@
+{
+  "name": "canada-covid-vaccine-map",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Yiyun95788/canada-covid-vaccine-map.git"
+  },
+  "private": true,
+  "dependencies": {
+    "papaparse": "^5.4.1"
+  }
+}

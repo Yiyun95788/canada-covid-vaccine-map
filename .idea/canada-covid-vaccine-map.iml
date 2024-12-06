@@ -11,5 +11,7 @@
     <orderEntry type="library" name="mapbox-gl" level="application" />
     <orderEntry type="library" name="d3.v7" level="application" />
     <orderEntry type="library" name="leaflet" level="application" />
+    <orderEntry type="library" name="PapaParse" level="application" />
+    <orderEntry type="library" name="chroma-js" level="application" />
   </component>
 </module>

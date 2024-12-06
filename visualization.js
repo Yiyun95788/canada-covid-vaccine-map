@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
         Toronto: { coords: [43.7232, -79.3832], zoom: 11 },
         Vancouver: { coords: [49.2827, -123.1207], zoom: 11 },
         Montreal: { coords: [45.5017, -73.5673], zoom: 11 },
-        Ottawa: { coords: [45.4215, -75.6972], zoom: 11 }
+        Ottawa: { coords: [45.4215, -75.6972], zoom: 12 }
     };
 
     async function initMap(city) {
@@ -37,6 +37,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (city === 'Toronto') {
             cityMap = new TorontoMap(map);
+            await cityMap.initialize();
+        } else if (city === 'Ottawa') {
+            cityMap = new OttawaMap(map);
             await cityMap.initialize();
         }
     }
