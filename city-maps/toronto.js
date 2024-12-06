@@ -17,39 +17,43 @@ class TorontoMap {
     }
 
     async initialize() {
-        await this.loadData();
-        this.addControls();
-        this.updateHeatmap('Ever Hospitalized');
+        try {
+            await this.loadData();
+            this.addControls();
+            this.updateHeatmap('Ever Hospitalized');
+        } catch (error) {
+            console.error('Initialization failed:', error);
+        }
     }
 
     async loadData() {
         try {
-            // Update paths to be relative to the root
+            const basePath = window.location.hostname === 'localhost' ? '' : '/canada-covid-vaccine-map';
+            const geoJsonPath = `${basePath}/data/Toronto.geojson`;
+            const csvPath = `${basePath}/data/toronto_covid.csv`;
+
             const [geoJsonResponse, csvResponse] = await Promise.all([
-                fetch('./data/Toronto.geojson'),
-                fetch('./data/toronto_covid.csv')
+                fetch(geoJsonPath),
+                fetch(csvPath)
             ]);
 
-            if (!geoJsonResponse.ok) {
-                throw new Error(`Failed to load GeoJSON: ${geoJsonResponse.status}`);
-            }
-            if (!csvResponse.ok) {
-                throw new Error(`Failed to load CSV: ${csvResponse.status}`);
+            if (!geoJsonResponse.ok || !csvResponse.ok) {
+                throw new Error('Failed to load data files');
             }
 
             this.torontoGeoJson = await geoJsonResponse.json();
             const csvText = await csvResponse.text();
-            const parsedCsv = Papa.parse(csvText, { header: true });
 
-            if (parsedCsv.errors.length > 0) {
+            const parsedCsv = Papa.parse(csvText, {
+                header: true,
+                skipEmptyLines: true
+            });
+
+            if (parsedCsv.errors.length) {
                 console.warn('CSV parsing warnings:', parsedCsv.errors);
             }
 
-            this.covidData = parsedCsv.data.filter(row => row['Neighbourhood Name']);
-
-            if (!this.covidData.length) {
-                throw new Error('No valid COVID data loaded');
-            }
+            this.covidData = parsedCsv.data;
         } catch (error) {
             console.error('Error loading Toronto data:', error);
             throw error;
