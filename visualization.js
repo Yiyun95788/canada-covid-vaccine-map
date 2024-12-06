@@ -11,8 +11,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
     async function initMap(city) {
         if (currentMap) {
+            // Properly cleanup existing map
+            if (cityMap) {
+                if (cityMap.currentGeoJson) {
+                    cityMap.currentGeoJson.remove();
+                }
+                if (currentMap.legend) {
+                    currentMap.removeControl(currentMap.legend);
+                }
+            }
             currentMap.remove();
+            currentMap = null;
+            cityMap = null;
         }
+
+        const mapContainer = document.getElementById('city-map');
+        if (!mapContainer) return;
 
         currentMap = L.map('city-map').setView(cities[city].coords, cities[city].zoom);
 
@@ -23,13 +37,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (city === 'Toronto') {
             cityMap = new TorontoMap(currentMap);
-            await cityMap.initialize();
+            try {
+                await cityMap.initialize();
+            } catch (error) {
+                console.error('Failed to initialize Toronto map:', error);
+            }
         }
     }
 
-    initMap('Toronto');
+    // Only initialize if map container exists
+    const mapContainer = document.getElementById('city-map');
+    if (mapContainer) {
+        initMap('Toronto');
 
-    document.getElementById('citySelect').addEventListener('change', (e) => {
-        initMap(e.target.value);
-    });
+        const citySelect = document.getElementById('citySelect');
+        if (citySelect) {
+            citySelect.addEventListener('change', (e) => {
+                initMap(e.target.value);
+            });
+        }
+    }
 });
