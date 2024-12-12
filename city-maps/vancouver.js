@@ -9,8 +9,6 @@ class VancouverMap {
             const response = await fetch('./data/Vancouver.geojson');
             const data = await response.json();
 
-            this.addLegend();
-
             // Style function for the choropleth
             const style = (feature) => {
                 const value = feature.properties.cases || 0;
@@ -65,29 +63,5 @@ class VancouverMap {
                             cases > 200  ? '#FEB24C' :
                                 cases > 100  ? '#FED976' :
                                     '#FFEDA0';
-    }
-
-    addLegend() {
-        if (this.map.legend) {
-            this.map.removeControl(this.map.legend);
-        }
-
-        this.map.legend = L.control({position: 'bottomright'});
-        this.map.legend.onAdd = () => {
-            const div = L.DomUtil.create('div', 'info legend');
-            const grades = [0, 100, 200, 500, 1000, 2000, 3000, 5000];
-
-            div.innerHTML += '<h4>COVID-19 Cases</h4>';
-
-            for (let i = 0; i < grades.length; i++) {
-                div.innerHTML +=
-                    '<i style="background:' + this.getColor(grades[i] + 1) + '"></i> ' +
-                    grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
-            }
-
-            return div;
-        };
-
-        this.map.legend.addTo(this.map);
     }
 }

@@ -2,9 +2,202 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>COVID-19 Visualizations</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #f5f8fa;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin: 0;
+            font-size: 2.2em;
+        }
+
+        .province-selector {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        select {
+            padding: 12px 24px;
+            font-size: 16px;
+            border: 2px solid #3498db;
+            border-radius: 25px;
+            background: white;
+            color: #2c3e50;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        select:hover {
+            border-color: #2980b9;
+            box-shadow: 0 2px 8px rgba(52,152,219,0.2);
+        }
+
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin: 20px auto;
+            width: 90%;
+            height: 500px;
+        }
+
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+    </style>
 </head>
 <body>
+<div class="header">
+    <h1>COVID-19 Dashboard - Canada</h1>
+</div>
+<div class="province-selector">
+    <select id="provinceSelect">
+        <option value="All">All Provinces</option>
+    </select>
+</div>
+<div id="vaccinationChart" class="chart-container"></div>
+<div id="mortalityChart" class="chart-container"></div>
 
+<script>
+    async function loadData() {
+        const [mortalityResponse, vaccinationResponse] = await Promise.all([
+            fetch('./data/mortality.csv'),
+            fetch('./data/vaccinations.csv')
+        ]);
+
+        const mortalityData = await mortalityResponse.text();
+        const vaccinationData = await vaccinationResponse.text();
+
+        const mortality = Papa.parse(mortalityData, { header: true, dynamicTyping: true }).data;
+        const vaccinations = Papa.parse(vaccinationData, { header: true, dynamicTyping: true }).data;
+
+        return { mortality, vaccinations };
+    }
+
+    function createCharts(mortality, vaccinations, selectedValue) {
+        let traces = [];
+        let mortalityTraces = [];
+
+        if (selectedValue === "All") {
+            const provinces = [...new Set(mortality
+                .filter(d => d.prename !== "Canada" && d.prename !== "Repatriated travellers")
+                .map(d => d.prename))];
+
+            provinces.forEach(province => {
+                const provinceVaccData = vaccinations.filter(d => d.prename === province);
+                const provinceMortData = mortality.filter(d => d.prename === province);
+
+                traces.push({
+                    x: provinceVaccData.map(d => d.week_end),
+                    y: provinceVaccData.map(d => d.numtotal_totaldoses_admin),
+                    name: province,
+                    type: 'scatter',
+                    line: { shape: 'spline' }
+                });
+
+                mortalityTraces.push({
+                    x: provinceMortData.map(d => d.date),
+                    y: provinceMortData.map(d => d.numdeaths_last7),
+                    name: province,
+                    type: 'scatter',
+                    line: { shape: 'spline' }
+                });
+            });
+        } else {
+            const provinceData = {
+                mortality: mortality.filter(d => d.prename === selectedValue),
+                vaccinations: vaccinations.filter(d => d.prename === selectedValue)
+            };
+
+            traces = [{
+                x: provinceData.vaccinations.map(d => d.week_end),
+                y: provinceData.vaccinations.map(d => d.numtotal_totaldoses_admin),
+                name: 'Total Vaccinations',
+                type: 'scatter',
+                line: { shape: 'spline' }
+            }];
+
+            mortalityTraces = [{
+                x: provinceData.mortality.map(d => d.date),
+                y: provinceData.mortality.map(d => d.numdeaths_last7),
+                name: '7-day Deaths',
+                type: 'scatter',
+                line: { shape: 'spline' }
+            }];
+        }
+
+        const layout = {
+            template: 'plotly_white',
+            hovermode: 'closest',
+            showlegend: true,
+            legend: {
+                bgcolor: 'rgba(255,255,255,0.9)',
+                bordercolor: '#E2E2E2',
+                borderwidth: 1
+            }
+        };
+
+        const vaccinationLayout = {
+            ...layout,
+            title: 'COVID-19 Vaccinations by Province',
+            xaxis: { title: 'Date', gridcolor: '#E2E2E2' },
+            yaxis: { title: 'Cumulative Vaccinations', gridcolor: '#E2E2E2' }
+        };
+
+        const mortalityLayout = {
+            ...layout,
+            title: 'COVID-19 Deaths by Province',
+            xaxis: { title: 'Date', gridcolor: '#E2E2E2' },
+            yaxis: { title: '7-day Deaths', gridcolor: '#E2E2E2' }
+        };
+
+        Plotly.newPlot('vaccinationChart', traces, vaccinationLayout);
+        Plotly.newPlot('mortalityChart', mortalityTraces, mortalityLayout);
+    }
+
+    async function init() {
+        const { mortality, vaccinations } = await loadData();
+        const provinces = [...new Set(mortality
+            .filter(d => d.prename !== "Canada" && d.prename !== "Repatriated travellers")
+            .map(d => d.prename))];
+
+        const select = document.getElementById('provinceSelect');
+        provinces.forEach(province => {
+            const option = document.createElement('option');
+            option.value = province;
+            option.textContent = province;
+            select.appendChild(option);
+        });
+
+        select.addEventListener('change', (e) => {
+            createCharts(mortality, vaccinations, e.target.value);
+        });
+
+        createCharts(mortality, vaccinations, "All");
+    }
+
+    init();
+</script>
 </body>
 </html>
